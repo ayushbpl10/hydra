@@ -186,6 +186,13 @@ type Client struct {
 	// Token to identify the RP session with the OP when the backchannel_logout_uri is used.
 	// If omitted, the default value is false.
 	BackChannelLogoutSessionRequired bool `json:"backchannel_logout_session_required,omitempty"`
+
+	// AccessTokenExpiresAt is an integer holding the time at which the client
+	// access token will expire or 0 if it will not expire. The time is
+	// represented as the number of seconds from 1970-01-01T00:00:00Z as
+	// measured in UTC until the date/time of expiration.
+	//
+	AccessTokenExpiresAt int64 `json:"access_token_expires_at"`
 }
 
 func (c *Client) GetID() string {
@@ -238,6 +245,10 @@ func (c *Client) GetOwner() string {
 
 func (c *Client) IsPublic() bool {
 	return c.TokenEndpointAuthMethod == "none"
+}
+
+func (c *Client) GetAccessTokenExpiresAt() int64 {
+	return c.AccessTokenExpiresAt
 }
 
 func (c *Client) GetJSONWebKeysURI() string {

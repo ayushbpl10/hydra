@@ -31,7 +31,7 @@ import (
 	"github.com/pkg/errors"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/square/go-jose.v2"
+	jose "gopkg.in/square/go-jose.v2"
 
 	"github.com/ory/fosite"
 	"github.com/ory/x/dbal"
@@ -90,6 +90,7 @@ type sqlData struct {
 	PostLogoutRedirectURIs            string    `db:"post_logout_redirect_uris"`
 	BackChannelLogoutURI              string    `db:"backchannel_logout_uri"`
 	BackChannelLogoutSessionRequired  bool      `db:"backchannel_logout_session_required"`
+	AccessTokenExpiresAt              int64     `db:"access_token_expires_at"`
 }
 
 var sqlParams = []string{
@@ -214,6 +215,7 @@ func (d *sqlData) ToClient() (*Client, error) {
 		PostLogoutRedirectURIs:            stringsx.Splitx(d.PostLogoutRedirectURIs, "|"),
 		BackChannelLogoutURI:              d.BackChannelLogoutURI,
 		BackChannelLogoutSessionRequired:  d.BackChannelLogoutSessionRequired,
+		AccessTokenExpiresAt:              d.AccessTokenExpiresAt,
 	}
 
 	if d.JSONWebKeys != "" {
